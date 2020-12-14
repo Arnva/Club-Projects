@@ -7,11 +7,7 @@ psg.theme('DarkAmber')
 layout = [[psg.Text('Enter Country: ', key='search_txt'), psg.InputText(key='bar')], [psg.Button('Search', bind_return_key=True)]]
 window = psg.Window('COVID StatFinder', layout=layout)
 
-
-
-
-
-api = 'https://corona.lmao.ninja/v2/countries/{country}?yesterday&strict&query' # Find suitable API today.
+api = 'https://corona.lmao.ninja/v2/countries/{country}?yesterday&strict&query'
 
 FIELDS = {'country': 'Country Name: ', 'cases': 'Cases: ', 'todayCases': 'Cases Today: ', 'deaths': 'Deaths: ', 'todayDeaths': 'Deaths Today: '}
 
@@ -24,10 +20,9 @@ def get_results(c):
     else:
         return 'No results found for this country!'
 
-
 while True:
     event, values = window.read()
-    if event == psg.WIN_CLOSED or event == 'Search':# if user closes window or clicks cancel
+    if event == psg.WIN_CLOSED or event == 'Search':
         result_layout = [[psg.Text(f'Results: {get_results(values["bar"])}')]]
         window.close()
         window = psg.Window('COVID StatFinder', layout=result_layout)
