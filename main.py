@@ -24,7 +24,10 @@ while True:
     if event == psg.WIN_CLOSED or event == 'Search':
         result_layout = [[psg.Text(f'Results: {get_results(values["bar"])}')], [psg.Button('Close', bind_return_key=True)]]
         window.close()
-        window = psg.Window('COVID StatFinder', layout=result_layout)
-        event, values = window.read()
-        if event == psg.WIN_CLOSED or event == 'Close':
-            break
+        break
+
+window = psg.Window('COVID StatFinder', layout=result_layout)
+while True:
+    event, values = window.read()
+    if event == psg.WIN_CLOSED or event == 'Close':
+        break
