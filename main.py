@@ -1,9 +1,8 @@
 import requests
 import PySimpleGUI as psg
-from requests.api import get
 
 # PSG setup
-psg.theme('BluePurple')
+psg.theme('SystemDefault')
 layout = [[psg.Text('Enter Country: ', key='search_txt'), psg.InputText(key='bar')], [psg.Button('Search', bind_return_key=True)]]
 window = psg.Window('COVID StatFinder', layout=layout)
 
