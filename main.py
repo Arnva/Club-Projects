@@ -3,7 +3,7 @@ import PySimpleGUI as psg
 from requests.api import get
 
 # PSG setup
-psg.theme('DarkAmber')
+psg.theme('BluePurple')
 layout = [[psg.Text('Enter Country: ', key='search_txt'), psg.InputText(key='bar')], [psg.Button('Search', bind_return_key=True)]]
 window = psg.Window('COVID StatFinder', layout=layout)
 
@@ -23,9 +23,9 @@ def get_results(c):
 while True:
     event, values = window.read()
     if event == psg.WIN_CLOSED or event == 'Search':
-        result_layout = [[psg.Text(f'Results: {get_results(values["bar"])}')]]
+        result_layout = [[psg.Text(f'Results: {get_results(values["bar"])}')], [psg.Button('Close', bind_return_key=True)]]
         window.close()
         window = psg.Window('COVID StatFinder', layout=result_layout)
         event, values = window.read()
-        if event == psg.WIN_CLOSED:
+        if event == psg.WIN_CLOSED or event == 'Close':
             break
