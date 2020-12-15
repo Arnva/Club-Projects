@@ -1,8 +1,11 @@
 import requests
 import PySimpleGUI as psg
+import json
 
+with open('settings.json') as f:
+    settings = json.load(f)
 # PSG setup
-psg.theme('BluePurple')
+psg.theme(settings['theme'])
 
 api = 'https://corona.lmao.ninja/v2/countries/{country}?yesterday&strict&query'
 
@@ -41,18 +44,18 @@ def load_results(values):
             break
 
 def load_settings():
-    settings_layout = [[psg.Text('Select theme: ')], [psg.Button('BluePurple'), psg.Button('DarkAmber')], [psg.Button('Cancel')]]
+    row1 = psg.theme_list()[:10]
+    settings_layout = [[psg.Text('Select theme: ')], [psg.Button(theme) for theme in row1], [psg.Button('Cancel')]]
     window = psg.Window('COVID StatFinder', layout=settings_layout)
     while True:
         event, values = window.read()
         if event == psg.WIN_CLOSED or event == 'Cancel':
             window.close()
             break
-        elif event == 'BluePurple':
-            psg.theme('BluePurple')
-            break
-        elif event == 'DarkAmber':
-            psg.theme('DarkAmber')
+        elif event in row1:
+            psg.theme(event)
+            with open('settings.json', 'w') as f:
+                json.dump({'theme': event}, f)
             break
     window.close()
     load_home()
@@ -62,15 +65,17 @@ def load_home():
     window = psg.Window('COVID StatFinder', layout=home_layout)
     while True:
         event, values = window.read()
-        if event == psg.WIN_CLOSED or event == 'Start':
+        if event == 'Start':
             window.close()
             results = load_tool()
             if results:
                 load_results(results)
-                break
+            break
         elif event == 'Settings':
             window.close()
             load_settings()
             break
-        
+        elif event == psg.WIN_CLOSED:
+            window.close()
+            break
 load_home()
