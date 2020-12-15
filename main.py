@@ -28,6 +28,8 @@ def load_tool():
         elif event == 'Search':
             window.close()
             return values
+        else:
+            return None
 
 def load_results(values):
     result_layout = [[psg.Text(f'Results: {get_results(values["bar"])}')], [psg.Button('Close', bind_return_key=True)]]
@@ -35,19 +37,25 @@ def load_results(values):
     while True:
         event, values = window.read()
         if event == psg.WIN_CLOSED or event == 'Close':
-            window.Close()
+            window.close()
             break
 
 def load_settings():
-    settings_layout = [[psg.Text('Select theme: ')], [psg.Button('BluePurple'), psg.Button('DarkAmber')], [psg.Button('Apply'), psg.Button('Cancel')]]
+    settings_layout = [[psg.Text('Select theme: ')], [psg.Button('BluePurple'), psg.Button('DarkAmber')], [psg.Button('Cancel')]]
     window = psg.Window('COVID StatFinder', layout=settings_layout)
     while True:
         event, values = window.read()
         if event == psg.WIN_CLOSED or event == 'Cancel':
             window.close()
-            load_home()
             break
-
+        elif event == 'BluePurple':
+            psg.theme('BluePurple')
+            break
+        elif event == 'DarkAmber':
+            psg.theme('DarkAmber')
+            break
+    window.close()
+    load_home()
 
 def load_home():
     home_layout = [[psg.Text('COVID StatFinder')], [psg.Button('Settings'), psg.Button('Start')]]
@@ -61,8 +69,8 @@ def load_home():
                 load_results(results)
                 break
         elif event == 'Settings':
-            load_settings()
             window.close()
+            load_settings()
             break
         
 load_home()
