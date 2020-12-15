@@ -44,15 +44,23 @@ def load_results(values):
             break
 
 def load_settings():
-    row1 = psg.theme_list()[:10]
-    settings_layout = [[psg.Text('Select theme: ')], [psg.Button(theme) for theme in row1], [psg.Button('Cancel')]]
+    rows = []
+    i = [0, 15]
+    while i[1] < len(psg.theme_list()):
+        rows.append(psg.theme_list()[i[0]:i[1]])
+        i[0], i[1] = i[1], i[1]+15
+
+    settings_layout = [[psg.Text('Select theme: ')]]
+    for row in rows:
+        settings_layout.append([psg.Button(t) for t in row])
+    settings_layout.append([psg.Button('Cancel')])
     window = psg.Window('COVID StatFinder', layout=settings_layout)
     while True:
         event, values = window.read()
         if event == psg.WIN_CLOSED or event == 'Cancel':
             window.close()
             break
-        elif event in row1:
+        elif event in [r for row in rows for r in row]:
             psg.theme(event)
             with open('settings.json', 'w') as f:
                 json.dump({'theme': event}, f)
