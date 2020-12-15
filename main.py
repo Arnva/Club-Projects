@@ -3,8 +3,6 @@ import PySimpleGUI as psg
 
 # PSG setup
 psg.theme('BluePurple')
-layout = [[psg.Text('Enter Country: ', key='search_txt'), psg.InputText(key='bar')], [psg.Button('Search', bind_return_key=True)]]
-window = psg.Window('COVID StatFinder', layout=layout)
 
 api = 'https://corona.lmao.ninja/v2/countries/{country}?yesterday&strict&query'
 
@@ -19,15 +17,52 @@ def get_results(c):
     else:
         return 'No results found for this country!'
 
-while True:
-    event, values = window.read()
-    if event == psg.WIN_CLOSED or event == 'Search':
-        result_layout = [[psg.Text(f'Results: {get_results(values["bar"])}')], [psg.Button('Close', bind_return_key=True)]]
-        window.close()
-        break
+def load_tool():
+    layout = [[psg.Text('Enter Country: ', key='search_txt'), psg.InputText(key='bar')], [psg.Button('Search', bind_return_key=True)]]
+    window = psg.Window('COVID StatFinder', layout=layout)
+    while True:
+        event, values = window.read()
+        if event == psg.WIN_CLOSED:
+            window.close()
+            return None
+        elif event == 'Search':
+            window.close()
+            return values
 
-window = psg.Window('COVID StatFinder', layout=result_layout)
-while True:
-    event, values = window.read()
-    if event == psg.WIN_CLOSED or event == 'Close':
-        break
+def load_results(values):
+    result_layout = [[psg.Text(f'Results: {get_results(values["bar"])}')], [psg.Button('Close', bind_return_key=True)]]
+    window = psg.Window('COVID StatFinder', layout=result_layout)
+    while True:
+        event, values = window.read()
+        if event == psg.WIN_CLOSED or event == 'Close':
+            window.Close()
+            break
+
+def load_settings():
+    settings_layout = [[psg.Text('Select theme: ')], [psg.Button('BluePurple'), psg.Button('DarkAmber')], [psg.Button('Apply'), psg.Button('Cancel')]]
+    window = psg.Window('COVID StatFinder', layout=settings_layout)
+    while True:
+        event, values = window.read()
+        if event == psg.WIN_CLOSED or event == 'Cancel':
+            window.close()
+            load_home()
+            break
+
+
+def load_home():
+    home_layout = [[psg.Text('COVID StatFinder')], [psg.Button('Settings'), psg.Button('Start')]]
+    window = psg.Window('COVID StatFinder', layout=home_layout)
+    while True:
+        event, values = window.read()
+        if event == psg.WIN_CLOSED or event == 'Start':
+            window.close()
+            results = load_tool()
+            if results:
+                load_results(results)
+                break
+        elif event == 'Settings':
+            load_settings()
+            window.close()
+            break
+        
+load_home()
