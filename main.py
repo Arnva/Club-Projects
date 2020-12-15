@@ -1,17 +1,29 @@
+'''
+Covid-19 Statistics Tracker
+
+Built by MNS 11-A CS Club
+
+Requirements:
+- Python3
+- PySimpleGUI
+- requests
+'''
+
 import requests
 import PySimpleGUI as psg
 import json
 
 with open('settings.json') as f:
-    settings = json.load(f)
+    settings = json.load(f) # Load settings.json
 # PSG setup
-psg.theme(settings['theme'])
+psg.theme(settings['theme']) # Set theme to previously selected theme
 
-api = 'https://corona.lmao.ninja/v2/countries/{country}?yesterday&strict&query'
+api = 'https://corona.lmao.ninja/v2/countries/{country}?yesterday&strict&query' # WIP: Make User-settable
 
-FIELDS = {'country': 'Country Name: ', 'cases': 'Cases: ', 'todayCases': 'Cases Today: ', 'deaths': 'Deaths: ', 'todayDeaths': 'Deaths Today: '}
+FIELDS = {'country': 'Country Name: ', 'cases': 'Cases: ', 'todayCases': 'Cases Today: ', 'deaths': 'Deaths: ', 'todayDeaths': 'Deaths Today: '} # WIP: Make User-settable
 
-def get_results(c):
+def get_results(c: str) -> str:
+    '''Get API data for a country'''
     resp = requests.get(api.format(country=c))
     result = resp.json()
     if not result.get('message'):
@@ -20,7 +32,9 @@ def get_results(c):
     else:
         return 'No results found for this country!'
 
-def load_tool():
+
+def load_tool() -> None:
+    '''Load the Input window'''
     layout = [[psg.Text('Enter Country: ', key='search_txt'), psg.InputText(key='bar')], [psg.Button('Search', bind_return_key=True)]]
     window = psg.Window('COVID StatFinder', layout=layout)
     while True:
@@ -34,7 +48,9 @@ def load_tool():
         else:
             return None
 
-def load_results(values):
+
+def load_results(values) -> None:
+    '''Load Results screen'''
     result_layout = [[psg.Text(f'Results: {get_results(values["bar"])}')], [psg.Button('Close', bind_return_key=True)]]
     window = psg.Window('COVID StatFinder', layout=result_layout)
     while True:
@@ -44,7 +60,8 @@ def load_results(values):
             break
     load_home()
 
-def load_settings():
+def load_settings() -> None:
+    '''Load Settings screen'''
     rows = []
     i = [0, 15]
     while i[1] < len(psg.theme_list()):
@@ -69,7 +86,8 @@ def load_settings():
     window.close()
     load_home()
 
-def load_home():
+def load_home() -> None:
+    '''Load Home screen'''
     home_layout = [[psg.Text('COVID StatFinder')], [psg.Button('Settings'), psg.Button('Start')]]
     window = psg.Window('COVID StatFinder', layout=home_layout)
     while True:
@@ -87,4 +105,4 @@ def load_home():
         elif event == psg.WIN_CLOSED:
             window.close()
             break
-load_home()
+load_home() # Begin event loop
