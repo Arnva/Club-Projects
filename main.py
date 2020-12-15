@@ -42,6 +42,7 @@ def load_results(values):
         if event == psg.WIN_CLOSED or event == 'Close':
             window.close()
             break
+    load_home()
 
 def load_settings():
     rows = []
