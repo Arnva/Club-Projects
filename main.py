@@ -60,6 +60,7 @@ def load_results(values) -> None:
             break
     load_home()
 
+
 def load_settings() -> None:
     '''Load Settings screen'''
     rows = []
@@ -86,6 +87,7 @@ def load_settings() -> None:
     window.close()
     load_home()
 
+
 def load_home() -> None:
     '''Load Home screen'''
     home_layout = [[psg.Text('COVID StatFinder')], [psg.Button('Settings'), psg.Button('Start')]]
@@ -105,4 +107,6 @@ def load_home() -> None:
         elif event == psg.WIN_CLOSED:
             window.close()
             break
+
+        
 load_home() # Begin event loop
